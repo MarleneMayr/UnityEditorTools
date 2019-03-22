@@ -18,7 +18,6 @@ namespace EditorTools
         private static System.Type[] types;
         private static string[] typesAsStrings;
 
-        // Add menu named "My Window" to the Window menu
         [MenuItem("Tools/Select and Process")]
         static void Init()
         {
@@ -44,11 +43,10 @@ namespace EditorTools
             {
                 GUIButtonSelectObjects();
                 GUIButtonFilterSelection();
-
             }
 
             // HEADER
-            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider); //horizontal Line
             EditorGUILayout.LabelField("Processing", EditorStyles.boldLabel);
             GUIScriptField();
             GUIButtonProcessObjects();

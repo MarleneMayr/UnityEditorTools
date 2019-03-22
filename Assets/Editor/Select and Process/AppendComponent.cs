@@ -12,7 +12,7 @@ namespace EditorTools
         internal override void processSelectedObjects(GameObject[] selectedGameObjects)
         {
             var type = Type.GetType(typeString);
-            AssetDatabaseUtil.AllAssetsOfType(type);
+            //AssetDatabaseUtil.AllAssetsOfType(type);
             Debug.Log(type);
             selectedGameObjects.Where(o => o.GetComponent(type) == null).ToList().ForEach(o => o.AddComponent(type));
         }
