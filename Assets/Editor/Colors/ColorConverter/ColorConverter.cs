@@ -8,7 +8,7 @@ namespace EditorTools
 {
     public class ColorConverter : EditorWindow
     {
-        private List<AnimationClip> animationClips;
+        private List<AnimationClip> animationClips = new List<AnimationClip>();
         private Color inputColor;
         private int selectTargetClipIndex;
 
@@ -104,16 +104,19 @@ namespace EditorTools
 
         private void GUIApplyColorToClip()
         {
-            var currentClip = animationClips[selectTargetClipIndex];
-            if (GUILayout.Button($"Apply color to \"{currentClip.name}\".", GUILayout.MinHeight(35)))
+            if (animationClips.Count > 0)
             {
-                if (AnimationUtility.GetCurveBindings(currentClip).Any())
+                var currentClip = animationClips[selectTargetClipIndex];
+                if (GUILayout.Button($"Apply color to \"{currentClip.name}\".", GUILayout.MinHeight(35)))
                 {
-                    ApplyColorToClip(inputColor, currentClip);
-                }
-                else
-                {
-                    ShowNotification(new GUIContent("No bindings found on target clip."));
+                    if (AnimationUtility.GetCurveBindings(currentClip).Any())
+                    {
+                        // ApplyColorToClip(inputColor, currentClip);
+                    }
+                    else
+                    {
+                        ShowNotification(new GUIContent("No bindings found on target clip."));
+                    }
                 }
             }
         }
@@ -140,10 +143,6 @@ namespace EditorTools
 
             bindings.ToList().ForEach(b => Debug.Log(b.propertyName == "m_Color.r"));
             ChangeKeys(rgba, bindings.Where(b => b.propertyName == "m_Color.r").ToList().Select(binding => AnimationUtility.GetEditorCurve(target, binding)));
-            ToList().ForEach(k => k.value = rgba.r));
-            bindings.Where(b => b.propertyName == "m_Color.g").ToList().ForEach(binding => AnimationUtility.GetEditorCurve(target, binding).keys.ToList().ForEach(k => k.value = rgba.g));
-            bindings.Where(b => b.propertyName == "m_Color.b").ToList().ForEach(binding => AnimationUtility.GetEditorCurve(target, binding).keys.ToList().ForEach(k => k.value = rgba.b));
-            bindings.Where(b => b.propertyName == "m_Color.a").ToList().ForEach(binding => AnimationUtility.GetEditorCurve(target, binding).keys.ToList().ForEach(k => k.value = rgba.a));
         }
 
         private void ChangeKeys(Color rgba, IEnumerable<AnimationCurve> curves)
