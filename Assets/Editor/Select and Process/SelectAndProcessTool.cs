@@ -7,33 +7,61 @@ namespace EditorTools
     {
         private Vector2 scrollPos;
 
-        bool showTypeSelection = true;
-        bool showPhraseSelection = true;
+        bool showAdvancedFilters;
+
+        string propertyName;
+        PropertyOperators propertyOperator;
+        enum PropertyOperators
+        {
+            equal,
+            notEqual
+        };
+        int propertyTypeIndex = 0;
+        string[] PropertyTypes = new string[] { "string", "int", "float", "Vector2", "Vector3", "bool", "object type" };
+        string propertyPhrase;
+        int propertyInt;
+        float propertyFloat;
+        Vector2 propertyVector2;
+        Vector3 propertyVector3;
+        bool propertyBool;
+        int propertyObjectTypeIndex;
+        string propertyObjectName;
 
 
-        [MenuItem("Tools/Select and Process")]
+        [MenuItem("Tools/Selection")]
         static void Init()
         {
             Select.ReferenceAllTypesInProject();
             var window = GetWindow<SelectAndProcessTool>(); // Get existing open window or if none, make a new one
-            window.Show();
+            window.ShowTab();
+            window.titleContent.text = "Selection";
         }
 
         void OnGUI()
         {
-            EditorGUIUtility.labelWidth = 200;
+            EditorGUIUtility.labelWidth = 180;
 
             // HEADER
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Selection", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Scene selection filtering", EditorStyles.boldLabel, GUILayout.MaxHeight(25));
 
             // Selection criteria
             GUICriteriaComponentType();
             GUICriteriaSearchPhrase();
+
+            EditorGUILayout.Space();
             GUICriteriaActiveOnly();
             GUICriteriaChildren();
 
+            // Advanced Filters
+            EditorGUILayout.Space();
+            GUIAdvancedFilters();
+
             GUIButtonFilterSelection();
+
+            // Current selection
+            GUILayout.FlexibleSpace();
+            GUIShowSelectedGameObjects();
 
             // HEADER
             /*
@@ -64,41 +92,96 @@ namespace EditorTools
 
         private void GUICriteriaComponentType()
         {
-            showTypeSelection = EditorGUILayout.Foldout(showTypeSelection, "select objects which contain a component of type...");
-            if (showTypeSelection)
+            Select.typeSelection = EditorGUILayout.BeginToggleGroup("Object has component of type:", Select.typeSelection);
+            using (new EditorGUILayout.HorizontalScope(EditorStyles.inspectorFullWidthMargins, GUILayout.MaxHeight(10)))
             {
-                using (new EditorGUI.IndentLevelScope())
+                if (Select.Types == null)
                 {
-                    Select.typeSelection = EditorGUILayout.BeginToggleGroup("enable/disable", Select.typeSelection);
-                    if (Select.Types == null)
-                    {
-                        Select.ReferenceAllTypesInProject();
-                    }
-                    Select.selectTypeIndex = EditorGUILayout.Popup(Select.selectTypeIndex, Select.TypesAsStrings);
-
-                    using (new EditorGUILayout.HorizontalScope("Refresh Button", GUILayout.MaxHeight(10)))
-                    {
-                        EditorGUILayout.Space();
-                        GUIButtonRefreshTypes();
-                    }
-                    EditorGUILayout.EndToggleGroup();
+                    Select.ReferenceAllTypesInProject();
                 }
+
+                Select.selectTypeIndex = EditorGUILayout.Popup(Select.selectTypeIndex, Select.TypesAsStrings);
+                GUIButtonRefreshTypes();
             }
+            EditorGUILayout.EndToggleGroup();
         }
 
         private void GUICriteriaSearchPhrase()
         {
-            showPhraseSelection = EditorGUILayout.Foldout(showPhraseSelection, "object's name contains...");
-            if (showPhraseSelection)
+            Select.phraseSelection = EditorGUILayout.BeginToggleGroup("Object name contains phrase:", Select.phraseSelection);
+            Select.selectPhrase = EditorGUILayout.TextField("Phrase: ", Select.selectPhrase);
+            EditorGUILayout.EndToggleGroup();
+        }
+
+        private void GUIAdvancedFilters()
+        {
+            showAdvancedFilters = EditorGUILayout.Foldout(showAdvancedFilters, "Advanced Filters");
+            if (showAdvancedFilters)
             {
                 using (new EditorGUI.IndentLevelScope())
                 {
-                    Select.phraseSelection = EditorGUILayout.BeginToggleGroup("enable/disable", Select.phraseSelection);
-                    Select.selectPhrase = EditorGUILayout.TextField("Phrase: ", Select.selectPhrase);
-                    EditorGUILayout.EndToggleGroup();
+                    GUIPropertyInComponent();
                 }
             }
         }
+
+        private void GUIPropertyInComponent()
+        {
+            Select.propertyInComponent = EditorGUILayout.BeginToggleGroup("Property in Component", Select.propertyInComponent);
+            using (new EditorGUI.IndentLevelScope())
+            {
+                using (new EditorGUILayout.HorizontalScope(EditorStyles.inspectorFullWidthMargins, GUILayout.MaxHeight(10)))
+                {
+                    EditorGUILayout.PrefixLabel("Property of type:");
+                    propertyTypeIndex = EditorGUILayout.Popup(propertyTypeIndex, PropertyTypes);
+                }
+
+                EditorGUILayout.LabelField("Property name", EditorStyles.miniLabel);
+                using (new EditorGUILayout.HorizontalScope(EditorStyles.inspectorFullWidthMargins, GUILayout.MaxHeight(10)))
+                {
+                    propertyName = EditorGUILayout.TextField(propertyName);
+                    EditorGUIUtility.labelWidth = 180;
+
+                    ChoosePropertyType();
+                }
+            }
+            EditorGUILayout.EndToggleGroup();
+        }
+
+        private void ChoosePropertyType()
+        {
+            switch (PropertyTypes[propertyTypeIndex])
+            {
+                case "string":
+                    propertyOperator = (PropertyOperators)EditorGUILayout.EnumPopup(propertyOperator, GUILayout.MaxWidth(100.0f));
+                    propertyPhrase = EditorGUILayout.TextField(propertyPhrase);
+                    break;
+                case "int":
+                    propertyOperator = (PropertyOperators)EditorGUILayout.EnumPopup(propertyOperator, GUILayout.MaxWidth(100.0f));
+                    propertyInt = EditorGUILayout.IntField(propertyInt);
+                    break;
+                case "float":
+                    propertyOperator = (PropertyOperators)EditorGUILayout.EnumPopup(propertyOperator, GUILayout.MaxWidth(100.0f));
+                    propertyFloat = EditorGUILayout.FloatField(propertyFloat);
+                    break;
+                case "Vector2":
+                    propertyOperator = (PropertyOperators)EditorGUILayout.EnumPopup(propertyOperator, GUILayout.MaxWidth(100.0f));
+                    propertyVector2 = EditorGUILayout.Vector2Field("", propertyVector2);
+                    break;
+                case "Vector3":
+                    propertyOperator = (PropertyOperators)EditorGUILayout.EnumPopup(propertyOperator, GUILayout.MaxWidth(100.0f));
+                    propertyVector3 = EditorGUILayout.Vector3Field("", propertyVector3);
+                    break;
+                case "bool":
+                    propertyBool = EditorGUILayout.Toggle("", propertyBool);
+                    break;
+                case "object type":
+                    propertyObjectTypeIndex = EditorGUILayout.Popup(propertyObjectTypeIndex, Select.TypesAsStrings);
+                    propertyObjectName = EditorGUILayout.TextField(propertyObjectName);
+                    break;
+            }
+        }
+
         private void GUICriteriaActiveOnly()
         {
             // select only active gameObjects

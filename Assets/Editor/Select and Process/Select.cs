@@ -15,6 +15,7 @@ namespace EditorTools
         internal static bool typeSelection, phraseSelection = false;
         internal static bool activeFilter, childrenFilter = false;
         internal static bool sceneObjectsFilter, assetsFilter = true;
+        internal static bool propertyInComponent;
 
         // Types
         private static System.Type[] types;
@@ -23,6 +24,8 @@ namespace EditorTools
 
         public static System.Type[] Types => types;
         public static string[] TypesAsStrings => typesAsStrings;
+
+
 
         internal static void SelectGameObjects()
         {
