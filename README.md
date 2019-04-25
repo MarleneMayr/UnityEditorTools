@@ -16,5 +16,6 @@ Possibilities:
 - GameObject active
 - include children in search
 
+--
 - filter your current selection
 - search all objects in current scene
