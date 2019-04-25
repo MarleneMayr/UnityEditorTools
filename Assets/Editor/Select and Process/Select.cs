@@ -11,14 +11,14 @@ namespace EditorTools
         public static EditorWindow Window { get { return window; } set { window = value; } }
 
         // GUI
-        internal static int selectTypeIndex;
-        internal static string selectPhrase;
+        public static int selectTypeIndex;
+        public static string selectPhrase;
 
         // Select Filters
-        internal static bool typeSelection, phraseSelection = false;
-        internal static bool activeFilter, childrenFilter = false;
-        internal static bool sceneObjectsFilter, assetsFilter = true;
-        internal static bool propertyInComponent;
+        public static bool typeSelection, phraseSelection = false;
+        public static bool activeFilter, childrenFilter = false;
+        public static bool sceneObjectsFilter, assetsFilter = true;
+        public static bool propertyInComponent;
 
         // Types
         private static System.Type[] types;
@@ -27,14 +27,14 @@ namespace EditorTools
         public static System.Type[] Types => types;
         public static string[] TypesAsStrings => typesAsStrings;
 
-        internal static void SelectGameObjects()
+        public static void SelectGameObjects()
         {
             // CollapseHierarchy();
             var allObjects = FindAllGameObjects();
             FilterSelection(allObjects, true);
         }
 
-        internal static void ApplyFilterToSelection()
+        public static void ApplyFilterToSelection()
         {
             var selection = Selection.gameObjects;
             FilterSelection(new List<GameObject>(selection), false);
@@ -58,7 +58,7 @@ namespace EditorTools
 
         #region ReferenceAllTypesInProject
 
-        internal static void ReferenceAllTypesInProject()
+        public static void ReferenceAllTypesInProject()
         {
             var typesList = CreateListOfAllTypes();
 
