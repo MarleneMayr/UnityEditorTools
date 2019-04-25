@@ -222,13 +222,6 @@ namespace EditorTools
             Select.childrenFilter = EditorGUILayout.Toggle("Select in objects' children", Select.childrenFilter);
         }
 
-        private void GUIScriptField()
-        {
-            EditorGUILayout.Space();
-            var label = "Process script:";
-            Process.processScript = EditorGUILayout.ObjectField(label, Process.processScript, typeof(BaseProcessing), false) as BaseProcessing;
-        }
-
         private void GUIButtonFilterSelection()
         {
             if (GUILayout.Button("Apply filter on Scene", GUILayout.MinHeight(45)))
@@ -252,21 +245,6 @@ namespace EditorTools
             }
         }
 
-        private void GUIButtonProcessObjects()
-        {
-            EditorGUILayout.Space();
-            if (GUILayout.Button("Process selected objects", GUILayout.MinHeight(40)))
-            {
-                if (Process.processScript == null)
-                {
-                    ShowNotification(new GUIContent("No processing script selected."));
-                }
-                else
-                {
-                    Process.processScript.processSelectedObjects(Selection.gameObjects);
-                }
-            }
-        }
         private void GUIButtonRefreshTypes()
         {
             if (GUILayout.Button("Refresh Types", GUILayout.ExpandWidth(false)))
