@@ -7,6 +7,9 @@ namespace EditorTools
 {
     class Select
     {
+        public static EditorWindow window;
+        public static EditorWindow Window { get { return window; } set { window = value; } }
+
         // GUI
         internal static int selectTypeIndex;
         internal static string selectPhrase;
@@ -138,7 +141,11 @@ namespace EditorTools
             }
             else
             {
-                Debug.Log("Selection criteria match no objects.");
+                Window.ShowNotification(new GUIContent("No objects match current filter."));
+                if (searchAll)
+                {
+                    Selection.objects = new Object[0];
+                }
             }
         }
 

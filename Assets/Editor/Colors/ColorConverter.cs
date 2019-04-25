@@ -12,11 +12,9 @@ namespace EditorTools
         private Color inputColor;
         private int selectTargetClipIndex;
 
-        [MenuItem("Tools/Color Converter")]
-        static void Init()
+        public static void Init()
         {
-            var window = GetWindow<ColorConverter>(); // Get existing open window or if none, make a new one
-            window.Show();
+
         }
 
         private void OnSelectionChange()

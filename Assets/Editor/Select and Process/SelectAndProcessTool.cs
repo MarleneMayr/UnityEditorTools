@@ -28,13 +28,10 @@ namespace EditorTools
         string propertyObjectName;
 
 
-        [MenuItem("Tools/Selection")]
-        static void Init()
+        public static void Init(EditorWindow selectWindow)
         {
             Select.ReferenceAllTypesInProject();
-            var window = GetWindow<SelectAndProcessTool>(); // Get existing open window or if none, make a new one
-            window.ShowTab();
-            window.titleContent.text = "Selection";
+            Select.Window = selectWindow;
         }
 
         void OnGUI()
