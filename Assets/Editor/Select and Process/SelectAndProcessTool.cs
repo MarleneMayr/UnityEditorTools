@@ -55,6 +55,7 @@ namespace EditorTools
             GUIAdvancedFilters();
 
             GUIButtonFilterSelection();
+            GUIButtonSearchScene();
 
             // Current selection
             GUILayout.FlexibleSpace();
@@ -71,9 +72,10 @@ namespace EditorTools
 
         private void GUIShowSelectedGameObjects()
         {
-            if (Selection.objects.Length > 0)
+            var selectionCount = Selection.objects.Length;
+            if (selectionCount > 0)
             {
-                EditorGUILayout.LabelField("Selected objects in scene:", EditorStyles.wordWrappedLabel);
+                EditorGUILayout.LabelField($"{selectionCount} selected objects in scene:", EditorStyles.wordWrappedLabel);
 
                 string currentSelection = "";
                 foreach (GameObject o in Selection.gameObjects)
@@ -212,7 +214,7 @@ namespace EditorTools
 
         private void GUIButtonFilterSelection()
         {
-            if (GUILayout.Button("Apply filter on SCENE", GUILayout.MinHeight(40)))
+            if (GUILayout.Button("Apply filter on Scene", GUILayout.MinHeight(45)))
             {
                 if (Selection.gameObjects.Length == 0)
                 {
@@ -224,6 +226,15 @@ namespace EditorTools
                 }
             }
         }
+
+        private void GUIButtonSearchScene()
+        {
+            if (GUILayout.Button("Search whole Scene"))
+            {
+                Select.SelectGameObjects();
+            }
+        }
+
         private void GUIButtonProcessObjects()
         {
             EditorGUILayout.Space();

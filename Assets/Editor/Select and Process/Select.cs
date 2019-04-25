@@ -24,23 +24,20 @@ namespace EditorTools
         private static System.Type[] types;
         private static string[] typesAsStrings;
 
-
         public static System.Type[] Types => types;
         public static string[] TypesAsStrings => typesAsStrings;
-
-
 
         internal static void SelectGameObjects()
         {
             // CollapseHierarchy();
             var allObjects = FindAllGameObjects();
-            FilterSelection(allObjects);
+            FilterSelection(allObjects, true);
         }
 
         internal static void ApplyFilterToSelection()
         {
             var selection = Selection.gameObjects;
-            FilterSelection(new List<GameObject>(selection));
+            FilterSelection(new List<GameObject>(selection), false);
         }
 
         // find and return all active, inactive objects containing of type text, including assets, prefabs etc.
@@ -105,12 +102,12 @@ namespace EditorTools
 
         #endregion // ReferenceAllTypesInProject
 
-        private static void FilterSelection(List<GameObject> currentSelection)
+        private static void FilterSelection(List<GameObject> currentSelection, bool searchAll)
         {
             var newSelection = new List<GameObject>();
             foreach (var gameObject in currentSelection)
             {
-                if (childrenFilter == true)
+                if (childrenFilter == true && searchAll == false)
                 {
                     var children = gameObject.GetComponentsInChildren<Transform>(true);
                     foreach (var child in children)
