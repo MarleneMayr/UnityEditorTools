@@ -12,7 +12,7 @@ namespace EditorTools
 
         private static void InitWindows()
         {
-            selectionTool = GetWindow<SelectAndProcessTool>("Selection");
+            selectionTool = GetWindow<SelectAndProcessTool>("Selection Filter");
             quickOverview = GetWindow<QuickOverview>("Overview", typeof(SelectAndProcessTool));
             colorTool = GetWindow<ColorTool>("Colors", typeof(QuickOverview));
         }
@@ -21,12 +21,12 @@ namespace EditorTools
         {
             SelectAndProcessTool.Init(selectionTool);
             QuickOverview.Init();
-            ColorConverter.Init();
+            ColorTool.Init();
         }
 
         /** Menu Items **/
 
-        [MenuItem("Tools/Utilites/Selection")]
+        [MenuItem("Tools/Utilites/Selection Filter")]
         public static void ShowSelection()
         {
             InitWindows();

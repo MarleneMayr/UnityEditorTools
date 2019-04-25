@@ -4,16 +4,14 @@ namespace EditorTools
 {
     public class ColorTool : EditorWindow
     {
-        // Start is called before the first frame update
-        void Start()
+        public static void Init()
         {
-
+            // TODO get relevant elements
         }
 
-        // Update is called once per frame
-        void Update()
+        void OnGUI()
         {
-
+            EditorGUILayout.LabelField("Not implemented yet.", EditorStyles.miniLabel);
         }
     }
 }

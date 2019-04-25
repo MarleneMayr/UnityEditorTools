@@ -5,6 +5,8 @@ namespace EditorTools
 {
     class SelectAndProcessTool : EditorWindow
     {
+        int tab;
+
         private Vector2 scrollPos;
 
         bool showAdvancedFilters;
@@ -38,10 +40,28 @@ namespace EditorTools
         {
             EditorGUIUtility.labelWidth = 180;
 
-            // HEADER
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Scene selection filtering", EditorStyles.boldLabel, GUILayout.MaxHeight(25));
+            using (new EditorGUILayout.HorizontalScope(EditorStyles.inspectorFullWidthMargins))
+            {
+                GUILayout.FlexibleSpace();
+                tab = GUILayout.Toolbar(tab, new string[] { "Scene", "Assets" }, GUILayout.MaxWidth(400), GUILayout.MaxHeight(25));
+                GUILayout.FlexibleSpace();
+            }
+            EditorGUILayout.Space();
 
+            switch (tab)
+            {
+                case 0:
+                    GUISceneFilter();
+                    break;
+                case 1:
+                    GUIAssetFilter();
+                    break;
+            }
+        }
+
+        private void GUISceneFilter()
+        {
             // Selection criteria
             GUICriteriaComponentType();
             GUICriteriaSearchPhrase();
@@ -52,7 +72,7 @@ namespace EditorTools
 
             // Advanced Filters
             EditorGUILayout.Space();
-            GUIAdvancedFilters();
+            // GUIAdvancedFilters();
 
             GUIButtonFilterSelection();
             GUIButtonSearchScene();
@@ -60,19 +80,16 @@ namespace EditorTools
             // Current selection
             GUILayout.FlexibleSpace();
             GUIShowSelectedGameObjects();
+        }
 
-            // HEADER
-            /*
-            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider); //horizontal Line
-            EditorGUILayout.LabelField("Processing", EditorStyles.boldLabel);
-            GUIScriptField();
-            GUIButtonProcessObjects();
-            */
+        private void GUIAssetFilter()
+        {
+            EditorGUILayout.LabelField("Not implemented yet.", EditorStyles.miniLabel);
         }
 
         private void GUIShowSelectedGameObjects()
         {
-            var selectionCount = Selection.objects.Length;
+            var selectionCount = Selection.gameObjects.Length;
             if (selectionCount > 0)
             {
                 EditorGUILayout.LabelField($"{selectionCount} selected objects in scene:", EditorStyles.wordWrappedLabel);

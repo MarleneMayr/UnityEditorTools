@@ -8,5 +8,10 @@ namespace EditorTools
         {
             // TODO get relevant elements
         }
+
+        void OnGUI()
+        {
+            EditorGUILayout.LabelField("Not implemented yet.", EditorStyles.miniLabel);
+        }
     }
 }
